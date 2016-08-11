@@ -85,19 +85,24 @@
               
 				// Comprobamos que nuestro navegador es compatible
 				if (!window.indexedDB) {
-					window.alert("Su navegador no soporta una versión estable de indexedDB. Tal y como las características no serán validas");
+					window.alert("Su navegador no soporta una versió® ¥stable de indexedDB. Tal y como las caracterî´´icas no serâ® validas");
 					return;
 				}
 				
 				var db, store;
 				var request = indexedDB.open("PruebaIndexedDB", 1);
+				request.onupgradeneeded = function(event) { 
+					var db = event.target.result;
+					var objectStore = db.createObjectStore("FEATURES", { keyPath: "OID" });
+				};
 				request.onsuccess = function(event) {
 					db = request.result;
 					var transaccion = db.transaction("FEATURES", "readwrite");
 					store = transaccion.objectStore("FEATURES");
+					store.clear();
 					array.forEach(map.graphics.graphics, function(feature){
 						if(feature.geometry.type == "polygon"){
-							var feat = {geometry:feature.geometry};
+							var feat = {OID:feature.attributes.OBJECTID, geometry:feature.geometry};
 							store.add(feat);
 						}
 					});				
@@ -108,7 +113,7 @@
 				
 				// Comprobamos que nuestro navegador es compatible
 				if (!window.indexedDB) {
-					window.alert("Su navegador no soporta una versión estable de indexedDB. Tal y como las características no serán validas");
+					window.alert("Su navegador no soporta una versió® ¥stable de indexedDB. Tal y como las caracterî´´icas no serâ® validas");
 					return;
 				}
 				
@@ -116,6 +121,8 @@
 				var request = indexedDB.open("PruebaIndexedDB", 1);
 				request.onsuccess = function(event) {
 				
+					map.graphics.clear();
+					
 					db = request.result;
 					var transaccion = db.transaction("FEATURES", "readwrite");
 					
